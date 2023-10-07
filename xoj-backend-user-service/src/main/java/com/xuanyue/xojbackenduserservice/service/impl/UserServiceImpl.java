@@ -20,11 +20,13 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.xuanyue.xojbackendcommon.constant.UserConstant.SALT;
 import static com.xuanyue.xojbackendcommon.constant.UserConstant.USER_LOGIN_STATE;
 
 
@@ -36,11 +38,6 @@ import static com.xuanyue.xojbackendcommon.constant.UserConstant.USER_LOGIN_STAT
 @Service
 @Slf4j
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
-
-    /**
-     * 盐值，混淆密码
-     */
-    private static final String SALT = "xuanyue";
 
     @Override
     public long userRegister(String userAccount, String userPassword, String checkPassword) {

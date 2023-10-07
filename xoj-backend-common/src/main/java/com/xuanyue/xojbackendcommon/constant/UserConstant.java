@@ -8,6 +8,11 @@ package com.xuanyue.xojbackendcommon.constant;
 public interface UserConstant {
 
     /**
+     * 盐值，混淆密码
+     */
+    String SALT = "xuanyue";
+
+    /**
      * 用户登录态键
      */
     String USER_LOGIN_STATE = "user_login";
