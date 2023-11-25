@@ -15,7 +15,7 @@ import java.io.InputStream;
 import java.net.URLEncoder;
 
 /**
- * @author Shier
+ * @author xuanyue_18
  * 阿里云对象存储实现类
  */
 @Service

@@ -19,7 +19,7 @@ public class XojBackendJudgeServiceApplication {
 
     public static void main(String[] args) {
         // 初始化消息队列
-        InitRabbitMq.doInit();
+        InitRabbitMq.doInitCodeMq();
         SpringApplication.run(XojBackendJudgeServiceApplication.class, args);
     }
 

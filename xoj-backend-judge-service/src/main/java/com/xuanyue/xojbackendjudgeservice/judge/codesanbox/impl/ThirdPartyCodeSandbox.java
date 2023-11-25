@@ -2,8 +2,9 @@ package com.xuanyue.xojbackendjudgeservice.judge.codesanbox.impl;
 
 
 import com.xuanyue.xojbackendjudgeservice.judge.codesanbox.CodeSandbox;
-import com.xuanyue.xojbackendmodel.model.codesandbox.ExecuteCodeRequest;
-import com.xuanyue.xojbackendmodel.model.codesandbox.ExecuteCodeResponse;
+import com.xuanyue.xojbackendmodel.model.dto.codesandbox.ExecuteCodeRequest;
+import com.xuanyue.xojbackendmodel.model.dto.codesandbox.ExecuteCodeResponse;
+
 
 /**
  * 第三方代码沙箱(调用网上的现成的代码沙箱)

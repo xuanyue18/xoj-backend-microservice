@@ -1,7 +1,8 @@
 package com.xuanyue.xojbackendjudgeservice.judge.codesanbox;
 
-import com.xuanyue.xojbackendmodel.model.codesandbox.ExecuteCodeRequest;
-import com.xuanyue.xojbackendmodel.model.codesandbox.ExecuteCodeResponse;
+
+import com.xuanyue.xojbackendmodel.model.dto.codesandbox.ExecuteCodeRequest;
+import com.xuanyue.xojbackendmodel.model.dto.codesandbox.ExecuteCodeResponse;
 import lombok.extern.slf4j.Slf4j;
 
 /**

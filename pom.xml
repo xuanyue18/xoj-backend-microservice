@@ -16,6 +16,8 @@
         <module>xoj-backend-question-service</module>
         <module>xoj-backend-user-service</module>
         <module>xoj-backend-judge-service</module>
+        <module>xoj-backend-file-service</module>
+        <module>xoj-code-sandbox</module>
     </modules>
     <properties>
         <java.version>1.8</java.version>

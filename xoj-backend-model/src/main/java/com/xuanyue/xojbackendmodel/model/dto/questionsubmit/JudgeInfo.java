@@ -17,12 +17,43 @@ public class JudgeInfo {
     private String message;
 
     /**
-     * 消耗内存
+     * 消耗内存(MB)
      */
     private Long memory;
 
     /**
-     * 消耗时间
+     * 消耗时间(ms)
      */
     private Long time;
+
+    /**
+     * 总用例数
+     */
+    private Integer total;
+
+    /**
+     * 通过用例数
+     */
+    private Integer pass;
+
+    /**
+     * 状态
+     */
+    private String status;
+
+    /**
+     * 输入
+     */
+    private String input;
+
+    /**
+     * 输出
+     */
+    private String output;
+
+    /**
+     * 期待输出
+     */
+    private String expectedOutput;
+
 }

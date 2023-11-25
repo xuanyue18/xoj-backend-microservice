@@ -1,4 +1,4 @@
-package com.xuanyue.xojbackendmodel.model.codesandbox;
+package com.xuanyue.xojbackendmodel.model.dto.codesandbox;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

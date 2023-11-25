@@ -25,7 +25,7 @@ import java.util.Map;
  *
  * @author xuanyue_18
  */
-@Component
+// @Component
 @Slf4j
 public class AuthFilter implements GlobalFilter, Ordered {
     /**
@@ -47,13 +47,14 @@ public class AuthFilter implements GlobalFilter, Ordered {
         // 1.排除不需要权限校验的连接
         // 当前请求连接
         String path = exchange.getRequest().getURI().getPath();
+        log.info("当前请求路径: {}", path);
         // 如果 当前链接不需要校验则直接放行
         if (excludedUrls.contains(path)) {
             return chain.filter(exchange);
         }
         // 2.获取token并校验
         String token = exchange.getRequest().getHeaders().getFirst("Authorization");
-        log.info("从请求头中获取的令牌：{}",token);
+        log.info("从请求头中获取的令牌：{}", token);
         // 不为空时把 ("Bearer"去掉) 有时候前端传来的 token是带这个的
         if (!StringUtils.isEmpty(token)) {
             token = token.replace("Bearer ", "");

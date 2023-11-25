@@ -1,7 +1,7 @@
 package com.xuanyue.xojbackendjudgeservice.judge.strategy;
 
 
-import com.xuanyue.xojbackendmodel.model.codesandbox.JudgeInfo;
+import com.xuanyue.xojbackendmodel.model.dto.questionsubmit.JudgeInfo;
 
 /**
  * 判题策略

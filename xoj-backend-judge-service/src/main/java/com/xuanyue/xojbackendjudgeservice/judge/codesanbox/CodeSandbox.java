@@ -1,7 +1,7 @@
 package com.xuanyue.xojbackendjudgeservice.judge.codesanbox;
 
-import com.xuanyue.xojbackendmodel.model.codesandbox.ExecuteCodeRequest;
-import com.xuanyue.xojbackendmodel.model.codesandbox.ExecuteCodeResponse;
+import com.xuanyue.xojbackendmodel.model.dto.codesandbox.ExecuteCodeRequest;
+import com.xuanyue.xojbackendmodel.model.dto.codesandbox.ExecuteCodeResponse;
 
 /**
  * 代码沙箱接口定义

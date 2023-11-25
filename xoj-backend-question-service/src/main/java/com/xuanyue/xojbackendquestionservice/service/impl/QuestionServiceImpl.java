@@ -11,11 +11,14 @@ import com.xuanyue.xojbackendcommon.exception.ThrowUtils;
 import com.xuanyue.xojbackendcommon.utils.SqlUtils;
 import com.xuanyue.xojbackendmodel.model.dto.question.QuestionQueryRequest;
 import com.xuanyue.xojbackendmodel.model.entity.Question;
+import com.xuanyue.xojbackendmodel.model.entity.QuestionSubmit;
 import com.xuanyue.xojbackendmodel.model.entity.User;
 import com.xuanyue.xojbackendmodel.model.vo.QuestionVO;
 import com.xuanyue.xojbackendmodel.model.vo.UserVO;
 import com.xuanyue.xojbackendquestionservice.mapper.QuestionMapper;
+import com.xuanyue.xojbackendquestionservice.mapper.QuestionSubmitMapper;
 import com.xuanyue.xojbackendquestionservice.service.QuestionService;
+import com.xuanyue.xojbackendquestionservice.service.QuestionSubmitService;
 import com.xuanyue.xojbackendserviceclient.service.UserFeignClient;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
@@ -41,6 +44,9 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
 
     @Resource
     private UserFeignClient userFeignClient;
+
+    @Resource
+    private QuestionSubmitMapper questionSubmitMapper;
 
     /**
      * 校验题目是否合法
@@ -106,18 +112,28 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
         String sortField = questionQueryRequest.getSortField();
         String sortOrder = questionQueryRequest.getSortOrder();
 
+        String keyword = questionQueryRequest.getKeyword();
+        Integer difficulty = questionQueryRequest.getDifficulty();
+
         // 拼接查询条件
         queryWrapper.like(StringUtils.isNotBlank(title), "title", title);
         queryWrapper.like(StringUtils.isNotBlank(content), "content", content);
         queryWrapper.like(StringUtils.isNotBlank(content), "answer", answer);
+        if (StringUtils.isNotBlank(keyword)) {
+            queryWrapper.like("title", keyword).or().like("content", keyword);
+        }
         if (CollectionUtils.isNotEmpty(tags)) {
             for (String tag : tags) {
                 queryWrapper.like("tags", "\"" + tag + "\"");
             }
         }
+
         queryWrapper.ne(ObjectUtils.isNotEmpty(id), "id", id);
         queryWrapper.eq(ObjectUtils.isNotEmpty(id), "id", id);
         queryWrapper.eq(ObjectUtils.isNotEmpty(userId), "userId", userId);
+        if (difficulty != null) {
+            queryWrapper.eq("difficulty", difficulty);
+        }
         queryWrapper.eq("isDelete", false);
         queryWrapper.orderBy(SqlUtils.validSortField(sortField), sortOrder.equals(CommonConstant.SORT_ORDER_ASC),
                 sortField);
@@ -134,6 +150,13 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
             user = userFeignClient.getById(userId);
         }
         UserVO userVO = userFeignClient.getUserVO(user);
+        QueryWrapper<QuestionSubmit> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("userId", userFeignClient.getLoginUser(request).getId())
+                .eq("questionId", questionVO.getId());
+        Long count = questionSubmitMapper.selectCount(queryWrapper);
+        if (count <= 0) {
+            questionVO.setAnswer(null);
+        }
         questionVO.setUserVO(userVO);
         return questionVO;
     }

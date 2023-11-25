@@ -42,6 +42,16 @@ public class QuestionQueryRequest extends PageRequest implements Serializable {
     private String answer;
 
     /**
+     * 关键词
+     */
+    private String keyword;
+
+    /**
+     * 题目难度
+     */
+    private Integer difficulty;
+
+    /**
      * 创建用户 id
      */
     private Long userId;

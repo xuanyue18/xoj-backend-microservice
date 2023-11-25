@@ -4,7 +4,7 @@ import com.xuanyue.xojbackendjudgeservice.judge.strategy.DefaultJudgeStrategy;
 import com.xuanyue.xojbackendjudgeservice.judge.strategy.JavaLanguageJudgeStrategy;
 import com.xuanyue.xojbackendjudgeservice.judge.strategy.JudgeContext;
 import com.xuanyue.xojbackendjudgeservice.judge.strategy.JudgeStrategy;
-import com.xuanyue.xojbackendmodel.model.codesandbox.JudgeInfo;
+import com.xuanyue.xojbackendmodel.model.dto.questionsubmit.JudgeInfo;
 import com.xuanyue.xojbackendmodel.model.entity.QuestionSubmit;
 import org.springframework.stereotype.Service;
 

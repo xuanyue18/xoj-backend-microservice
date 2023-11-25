@@ -48,6 +48,11 @@ public class QuestionSubmitVO implements Serializable {
     private Long questionId;
 
     /**
+     * 题目名称
+     */
+    private String questionTitle;
+
+    /**
      * 创建用户 id
      */
     private Long userId;

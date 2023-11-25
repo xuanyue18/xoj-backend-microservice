@@ -1,8 +1,8 @@
 package com.xuanyue.xojbackendquestionservice.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.gson.Gson;
-
 import com.xuanyue.xojbackendcommon.annotation.AuthCheck;
 import com.xuanyue.xojbackendcommon.common.BaseResponse;
 import com.xuanyue.xojbackendcommon.common.DeleteRequest;
@@ -23,6 +23,7 @@ import com.xuanyue.xojbackendquestionservice.service.QuestionService;
 import com.xuanyue.xojbackendquestionservice.service.QuestionSubmitService;
 import com.xuanyue.xojbackendserviceclient.service.UserFeignClient;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -207,10 +208,15 @@ public class QuestionController {
         long size = questionQueryRequest.getPageSize();
         // 限制爬虫
         ThrowUtils.throwIf(size > 20, ErrorCode.PARAMS_ERROR);
-        Page<Question> questionPage = questionService.page(new Page<>(current, size),
-                questionService.getQueryWrapper(questionQueryRequest));
+        Integer difficulty = questionQueryRequest.getDifficulty();
+        QueryWrapper<Question> queryWrapper = questionService.getQueryWrapper(questionQueryRequest);
+        if (difficulty != null) {
+            queryWrapper.eq("difficulty", difficulty);
+        }
+        Page<Question> questionPage = questionService.page(new Page<>(current, size), queryWrapper);
         return ResultUtils.success(questionService.getQuestionVOPage(questionPage, request));
     }
+
 
     /**
      * 分页获取当前用户创建的资源列表
@@ -328,12 +334,34 @@ public class QuestionController {
                                                                          HttpServletRequest request) {
         long current = questionSubmitQueryRequest.getCurrent();
         long size = questionSubmitQueryRequest.getPageSize();
+        QueryWrapper<QuestionSubmit> queryWrapper = questionSubmitService.getQueryWrapper(questionSubmitQueryRequest);
         Page<QuestionSubmit> questionSubmitPage = questionSubmitService.page(new Page<>(current, size),
-                questionSubmitService.getQueryWrapper(questionSubmitQueryRequest));
+                queryWrapper);
         final User loginUser = userFeignClient.getLoginUser(request);
         return ResultUtils.success(questionSubmitService.getQuestionSubmitVOPage(questionSubmitPage, loginUser));
     }
 
-
+    /**
+     * 根据 id 获取题目提交记录
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("/question_submit/get")
+    public BaseResponse<QuestionSubmitVO> getQuestionSubmitById(long id, HttpServletRequest request) {
+        if (id <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        QuestionSubmit questionSubmit = questionSubmitService.getById(id);
+        if (questionSubmit == null) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
+        }
+        User loginUser = userFeignClient.getLoginUser(request);
+        // 不是本人或管理员, 不能直接获取所有信息
+        if (!questionSubmit.getUserId().equals(loginUser.getId()) && !userFeignClient.isAdmin(loginUser)) {
+            throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
+        }
+        return ResultUtils.success(questionSubmitService.getQuestionSubmitVO(questionSubmit,loginUser));
+    }
 
 }

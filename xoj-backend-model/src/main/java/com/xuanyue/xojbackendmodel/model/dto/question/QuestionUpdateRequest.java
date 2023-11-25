@@ -48,6 +48,11 @@ public class QuestionUpdateRequest implements Serializable {
      */
     private JudgeConfig judgeConfig;
 
+    /**
+     * 题目难度
+     */
+    private Integer difficulty;
+
     private static final long serialVersionUID = 1L;
 
 }

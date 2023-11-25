@@ -1,9 +1,9 @@
 package com.xuanyue.xojbackendjudgeservice.judge.codesanbox.impl;
 
 import com.xuanyue.xojbackendjudgeservice.judge.codesanbox.CodeSandbox;
-import com.xuanyue.xojbackendmodel.model.codesandbox.ExecuteCodeRequest;
-import com.xuanyue.xojbackendmodel.model.codesandbox.ExecuteCodeResponse;
-import com.xuanyue.xojbackendmodel.model.codesandbox.JudgeInfo;
+import com.xuanyue.xojbackendmodel.model.dto.codesandbox.ExecuteCodeRequest;
+import com.xuanyue.xojbackendmodel.model.dto.codesandbox.ExecuteCodeResponse;
+import com.xuanyue.xojbackendmodel.model.dto.questionsubmit.JudgeInfo;
 import com.xuanyue.xojbackendmodel.model.enums.JudgeInfoMessageEnum;
 import com.xuanyue.xojbackendmodel.model.enums.QuestionSubmitStatuEnum;
 

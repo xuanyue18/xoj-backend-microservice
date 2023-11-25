@@ -42,5 +42,10 @@ public class QuestionInnerController implements QuestionFeignClient {
        return questionSubmitService.updateById(questionSubmit);
     }
 
+    @Override
+    public boolean updateQuestion(Question question) {
+        return questionService.updateById(question);
+    }
+
 
 }

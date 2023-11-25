@@ -5,8 +5,8 @@ import cn.hutool.json.JSONUtil;
 import com.xuanyue.xojbackendcommon.common.ErrorCode;
 import com.xuanyue.xojbackendcommon.exception.BusinessException;
 import com.xuanyue.xojbackendjudgeservice.judge.codesanbox.CodeSandbox;
-import com.xuanyue.xojbackendmodel.model.codesandbox.ExecuteCodeRequest;
-import com.xuanyue.xojbackendmodel.model.codesandbox.ExecuteCodeResponse;
+import com.xuanyue.xojbackendmodel.model.dto.codesandbox.ExecuteCodeRequest;
+import com.xuanyue.xojbackendmodel.model.dto.codesandbox.ExecuteCodeResponse;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -25,7 +25,7 @@ public class RemoteCodeSandbox implements CodeSandbox {
     @Override
     public ExecuteCodeResponse executeCode(ExecuteCodeRequest executeCodeRequest) {
         System.out.println("远程代码沙箱");
-        String url = "http://localhost:8090/executeCode";
+        String url = "http://localhost:8123/executeCode";
         String json = JSONUtil.toJsonStr(executeCodeRequest);
         String responseStr = HttpUtil.createPost(url)
                 .header(AUTH_REQUEST_HEADER, AUTH_REQUEST_SECRET)

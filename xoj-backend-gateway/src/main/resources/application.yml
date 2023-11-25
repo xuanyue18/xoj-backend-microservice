@@ -37,4 +37,4 @@ knife4j:
 
 # 这个配置是不用看token是否合法 直接通过
 gateway:
-  excludedUrls: /api/user/get/login,/api/user/logout,/user/register,/api/user/update/my,/api/user/login,/user/getLoginUser,/api/user/register,/api/question/list/page/vo,/api/file
+  excludedUrls: /api/file/v2/api-docs,/api/user/v2/api-docs,/api/user/get/login,/api/user/logout,/user/register,/api/user/update/my,/api/user/login,/user/getLoginUser,/api/user/register,/api/question/list/page/vo,/api/file

@@ -60,6 +60,11 @@ public class Question implements Serializable {
     private String judgeConfig;
 
     /**
+     * 题目难度（0 - 简单、1 - 中等、2 - 困难）
+     */
+    private Integer difficulty;
+
+    /**
      * 点赞数
      */
     private Integer thumbNum;

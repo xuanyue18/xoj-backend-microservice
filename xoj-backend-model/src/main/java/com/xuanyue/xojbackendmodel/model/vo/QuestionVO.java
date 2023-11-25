@@ -36,6 +36,11 @@ public class QuestionVO implements Serializable {
     private String content;
 
     /**
+     * 题目答案
+     */
+    private String answer;
+
+    /**
      * 标签列表（json 数组）
      */
     private List<String> tags;
@@ -54,6 +59,11 @@ public class QuestionVO implements Serializable {
      * 判题配置（json 对象）
      */
     private JudgeConfig judgeConfig;
+
+    /**
+     * 题目难度（0 - 简单、1 - 中等、2 - 困难）
+     */
+    private Integer difficulty;
 
     /**
      * 点赞数

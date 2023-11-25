@@ -35,5 +35,6 @@ public class QuestionSubmitQueryRequest extends PageRequest implements Serializa
      */
     private Long userId;
 
+
     private static final long serialVersionUID = 1L;
 }

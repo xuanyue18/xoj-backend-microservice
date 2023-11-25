@@ -1,9 +1,10 @@
 package com.xuanyue.xojbackendjudgeservice.judge.strategy;
 
 import cn.hutool.json.JSONUtil;
-import com.xuanyue.xojbackendmodel.model.codesandbox.JudgeInfo;
+
 import com.xuanyue.xojbackendmodel.model.dto.question.JudgeCase;
 import com.xuanyue.xojbackendmodel.model.dto.question.JudgeConfig;
+import com.xuanyue.xojbackendmodel.model.dto.questionsubmit.JudgeInfo;
 import com.xuanyue.xojbackendmodel.model.entity.Question;
 import com.xuanyue.xojbackendmodel.model.enums.JudgeInfoMessageEnum;
 

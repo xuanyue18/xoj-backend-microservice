@@ -6,15 +6,19 @@ import com.xuanyue.xojbackendcommon.exception.BusinessException;
 import com.xuanyue.xojbackendjudgeservice.judge.codesanbox.CodeSandbox;
 import com.xuanyue.xojbackendjudgeservice.judge.codesanbox.CodeSandboxFactory;
 import com.xuanyue.xojbackendjudgeservice.judge.codesanbox.CodeSandboxProxy;
-import com.xuanyue.xojbackendjudgeservice.judge.strategy.JudgeContext;
-import com.xuanyue.xojbackendmodel.model.codesandbox.ExecuteCodeRequest;
-import com.xuanyue.xojbackendmodel.model.codesandbox.ExecuteCodeResponse;
-import com.xuanyue.xojbackendmodel.model.codesandbox.JudgeInfo;
+import com.xuanyue.xojbackendmodel.model.dto.codesandbox.ExecuteCodeRequest;
+import com.xuanyue.xojbackendmodel.model.dto.codesandbox.ExecuteCodeResponse;
+import com.xuanyue.xojbackendmodel.model.dto.codesandbox.ExecuteResult;
 import com.xuanyue.xojbackendmodel.model.dto.question.JudgeCase;
+import com.xuanyue.xojbackendmodel.model.dto.question.JudgeConfig;
+import com.xuanyue.xojbackendmodel.model.dto.questionsubmit.JudgeInfo;
 import com.xuanyue.xojbackendmodel.model.entity.Question;
 import com.xuanyue.xojbackendmodel.model.entity.QuestionSubmit;
+import com.xuanyue.xojbackendmodel.model.enums.ExecuteCodeStatusEnum;
+import com.xuanyue.xojbackendmodel.model.enums.JudgeInfoMessageEnum;
 import com.xuanyue.xojbackendmodel.model.enums.QuestionSubmitStatuEnum;
 import com.xuanyue.xojbackendserviceclient.service.QuestionFeignClient;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +31,7 @@ import java.util.stream.Collectors;
  * @date 2023/9/10 19:43
  */
 @Service
+@Slf4j
 public class JudgeServiceImpl implements JudgeService {
 
     @Value("${codesandbox.type: exampel}")
@@ -68,8 +73,7 @@ public class JudgeServiceImpl implements JudgeService {
         String language = questionSubmit.getLanguage();
         String code = questionSubmit.getCode();
         // 获取输入用例
-        String judgeCaseStr = question.getJudgeCase();
-        List<JudgeCase> judgeCaseList = JSONUtil.toList(judgeCaseStr, JudgeCase.class);
+        List<JudgeCase> judgeCaseList = JSONUtil.toList(question.getJudgeCase(), JudgeCase.class);
         List<String> inputList = judgeCaseList.stream().map(JudgeCase::getInput).collect(Collectors.toList());
         ExecuteCodeRequest executeCodeRequest = ExecuteCodeRequest.builder()
                 .code(code)
@@ -77,25 +81,86 @@ public class JudgeServiceImpl implements JudgeService {
                 .inputList(inputList)
                 .build();
         ExecuteCodeResponse executeCodeResponse = codeSandbox.executeCode(executeCodeRequest);
-        List<String> outputList = executeCodeResponse.getOutputList();
+
         // 5）根据沙箱的执行结果，设置题目的判题状态和信息
-        JudgeContext judgeContext = new JudgeContext();
-        judgeContext.setJudgeInfo(executeCodeResponse.getJudgeInfo());
-        judgeContext.setInputList(inputList);
-        judgeContext.setOutputList(outputList);
-        judgeContext.setJudgeCaseList(judgeCaseList);
-        judgeContext.setQuestion(question);
-        judgeContext.setQuestionSubmit(questionSubmit);
-        JudgeInfo judgeInfo = judgeManager.doJudge(judgeContext);
+        JudgeInfo judgeInfo = new JudgeInfo();
+        int total = judgeCaseList.size();
+        judgeInfo.setTotal(total);
+        // 执行成功
+        if (executeCodeResponse.getStatus().equals(ExecuteCodeStatusEnum.SUCCESS.getValue())) {
+            // 期望输出
+            List<String> expectedOutput = judgeCaseList.stream().map(JudgeCase::getOutput).collect(Collectors.toList());
+            // 测试用例详细信息
+            List<ExecuteResult> results = executeCodeResponse.getResults();
+            // 实际输出
+            List<String> output = results.stream().map(ExecuteResult::getOutput).collect(Collectors.toList());
+            // 判题配置
+            JudgeConfig judgeConfig = JSONUtil.toBean(question.getJudgeConfig(), JudgeConfig.class);
+
+            // 设置通过的测试用例
+            int pass = 0;
+            // 设置最大运行时间
+            long maxTime = Long.MIN_VALUE;
+            for (int i = 0; i < total; i++) {
+                // 判断执行时间
+                Long time = results.get(i).getTime();
+                if (time > maxTime) {
+                    maxTime = time;
+                }
+                // 期望输出与实际输出比较,相等则通过
+                if (expectedOutput.get(i).equals(output.get(i))) {
+                    // 超时
+                    if (maxTime > judgeConfig.getTimeLimit()) {
+                        judgeInfo.setTime(maxTime);
+                        judgeInfo.setPass(pass);
+                        judgeInfo.setStatus(JudgeInfoMessageEnum.TIME_LIMIT_EXCEEDED.getValue());
+                        judgeInfo.setMessage(JudgeInfoMessageEnum.TIME_LIMIT_EXCEEDED.getText());
+                        break;
+                    } else {
+                        pass++;
+                    }
+                } else {
+                    // 遇到了一个没通过的
+                    judgeInfo.setPass(pass);
+                    judgeInfo.setTime(maxTime);
+                    judgeInfo.setStatus(JudgeInfoMessageEnum.WRONG_ANSWER.getValue());
+                    judgeInfo.setMessage(JudgeInfoMessageEnum.WRONG_ANSWER.getText());
+                    // 设置输出和预期输出信息
+                    judgeInfo.setInput(inputList.get(i));
+                    judgeInfo.setOutput(output.get(i));
+                    judgeInfo.setExpectedOutput(expectedOutput.get(i));
+                    break;
+                }
+            }
+            if (pass == total) {
+                judgeInfo.setPass(total);
+                judgeInfo.setTime(maxTime);
+                judgeInfo.setStatus(JudgeInfoMessageEnum.ACCEPTED.getValue());
+                judgeInfo.setMessage(JudgeInfoMessageEnum.ACCEPTED.getText());
+            }
+        } else if (executeCodeResponse.getStatus().equals(ExecuteCodeStatusEnum.RUN_FAILED.getValue())) {
+            judgeInfo.setPass(0);
+            judgeInfo.setStatus(JudgeInfoMessageEnum.RUNTIME_ERROR.getValue());
+            judgeInfo.setMessage(JudgeInfoMessageEnum.RUNTIME_ERROR.getText() + executeCodeResponse.getMessage());
+        } else if (executeCodeResponse.getStatus().equals(ExecuteCodeStatusEnum.COMPILE_FAILED.getValue())) {
+            judgeInfo.setPass(0);
+            judgeInfo.setStatus(JudgeInfoMessageEnum.COMPILE_ERROR.getValue());
+            judgeInfo.setMessage(JudgeInfoMessageEnum.COMPILE_ERROR.getText() + executeCodeResponse.getMessage());
+        }
+
         // 6)修改数据库中的判题结果
-        questionSubmitUpdate = new QuestionSubmit();
-        questionSubmitUpdate.setId(questionSubmitId);
-        questionSubmitUpdate.setStatus(QuestionSubmitStatuEnum.SUCCESS.getValue());
+        boolean judgeResult = judgeInfo.getStatus().equals(JudgeInfoMessageEnum.ACCEPTED.getValue());
+
+        questionSubmitUpdate.setStatus(judgeResult ?
+                QuestionSubmitStatuEnum.SUCCESS.getValue() :
+                QuestionSubmitStatuEnum.FAILED.getValue());
         questionSubmitUpdate.setJudgeInfo(JSONUtil.toJsonStr(judgeInfo));
+        log.info("判题信息{}", JSONUtil.toJsonStr(judgeInfo));
         update = questionFeignClient.updateQuestionSubmitById(questionSubmitUpdate);
         if (!update) {
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "题目状态更新错误");
         }
+
         QuestionSubmit questionSubmitResult = questionFeignClient.getQuestionSubmitById(questionId);
         return questionSubmitResult;
     }

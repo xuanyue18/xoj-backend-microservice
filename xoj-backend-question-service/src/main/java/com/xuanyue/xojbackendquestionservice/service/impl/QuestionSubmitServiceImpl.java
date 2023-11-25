@@ -15,6 +15,7 @@ import com.xuanyue.xojbackendmodel.model.entity.User;
 import com.xuanyue.xojbackendmodel.model.enums.QuestionSubmitLanguageEnum;
 import com.xuanyue.xojbackendmodel.model.enums.QuestionSubmitStatuEnum;
 import com.xuanyue.xojbackendmodel.model.vo.QuestionSubmitVO;
+import com.xuanyue.xojbackendmodel.model.vo.UserVO;
 import com.xuanyue.xojbackendquestionservice.mapper.QuestionSubmitMapper;
 import com.xuanyue.xojbackendquestionservice.rabbitmq.MyMessageProducer;
 import com.xuanyue.xojbackendquestionservice.service.QuestionService;
@@ -30,6 +31,9 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.xuanyue.xojbackendcommon.constant.MqConstant.CODE_EXCHANGE_NAME;
+import static com.xuanyue.xojbackendcommon.constant.MqConstant.CODE_ROUTING_KEY;
 
 /**
  * @author xuanyue18
@@ -74,6 +78,18 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
         if (question == null) {
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
         }
+        // 设置提交数
+        Integer submitNum = question.getSubmitNum();
+        Question updateQuestion = new Question();
+        synchronized (question.getSubmitNum()) {
+            submitNum = submitNum + 1;
+            updateQuestion.setId(questionId);
+            updateQuestion.setSubmitNum(submitNum);
+            boolean save = questionService.updateById(updateQuestion);
+            if (!save) {
+                throw new BusinessException(ErrorCode.OPERATION_ERROR, "数据保存失败");
+            }
+        }
         // 是否已提交题目
         long userId = loginUser.getId();
         // 每个用户串行提交题目
@@ -91,7 +107,7 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
         }
         Long questionSubmitId = questionSubmit.getId();
         // 发送消息
-        myMessageProducer.sendMessage("code_exchange", "my_routingKey", String.valueOf(questionSubmitId));
+        myMessageProducer.sendMessage(CODE_EXCHANGE_NAME, CODE_ROUTING_KEY, String.valueOf(questionSubmitId));
 
         // 执行判题服务
         // CompletableFuture.runAsync(() -> {
@@ -133,13 +149,17 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
     @Override
     public QuestionSubmitVO getQuestionSubmitVO(QuestionSubmit questionSubmit, User loginUser) {
         QuestionSubmitVO questionSubmitVO = QuestionSubmitVO.objToVo(questionSubmit);
+        String title = questionService.getById(questionSubmit.getQuestionId()).getTitle();
+        questionSubmitVO.setQuestionTitle(title);
+        User user = userFeignClient.getById(questionSubmitVO.getUserId());
+        UserVO userVO = userFeignClient.getUserVO(user);
+        questionSubmitVO.setUserVO(userVO);
         // 脱敏: 仅本人和管理员能看见自己(提交userId和登录用户id不同)提交的代码
-        long userId = loginUser.getId();
-
+        // long userId = loginUser.getId();
         // 处理脱敏
-        if (userId != questionSubmit.getUserId() && !userFeignClient.isAdmin(loginUser)) {
-            questionSubmitVO.setCode(null);
-        }
+        // if (userId != questionSubmit.getUserId() && !userFeignClient.isAdmin(loginUser)) {
+        //     questionSubmitVO.setCode(null);
+        // }
         return questionSubmitVO;
     }
 

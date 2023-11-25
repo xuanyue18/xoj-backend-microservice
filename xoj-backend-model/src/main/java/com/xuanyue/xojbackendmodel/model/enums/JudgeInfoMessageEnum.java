@@ -13,17 +13,17 @@ import java.util.stream.Collectors;
  */
 public enum JudgeInfoMessageEnum {
 
-    ACCEPTED("success", "成功"),
-    WRONG_ANSWER("wrong answer", "答案错误"),
-    COMPILE_ERROR("compile error", "编译错误"),
-    MEMORY_LIMIT_EXCEEDED("memory limit exceeded", "内存溢出"),
-    TIME_LIMIT_EXCEEDED("time limit exceeded", "超时"),
-    PRESENTATION_ERROR("presentation error", "展示错误"),
-    OUTPUT_LIMIT_EXCEEDED("output limit exceeded", "输出溢出"),
-    WAITING("waiting", "等待中"),
-    DANGEROUS_OPERATION("dangerous operation", "危险操作"),
-    RUNTIME_ERROR("runtime error", "运行错误（用户程序的问题）"),
-    SYSTEM_ERROR("system error", "系统错误（做系统人的问题）");
+    ACCEPTED("通过", "accepted"),
+    WRONG_ANSWER("输出结果与预期不符!", "wrong answer"),
+    COMPILE_ERROR("编译错误", "compile error"),
+    MEMORY_LIMIT_EXCEEDED("内存溢出", "memory limit exceeded"),
+    TIME_LIMIT_EXCEEDED("超时", "time limit exceeded"),
+    PRESENTATION_ERROR("展示错误", "presentation error"),
+    OUTPUT_LIMIT_EXCEEDED("输出溢出", "output limit exceeded"),
+    WAITING("等待中", "waiting"),
+    DANGEROUS_OPERATION("危险操作", "dangerous operation"),
+    RUNTIME_ERROR("运行错误(用户程序的问题)", "runtime error"),
+    SYSTEM_ERROR("系统错误(做系统人的问题)", "system error");
 
     private final String text;
 

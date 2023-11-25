@@ -16,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 
 /**
- * @author Shier
+ * @author xuanyue_18
  * 文件上传接口
  */
 @Api(tags = "FileController")

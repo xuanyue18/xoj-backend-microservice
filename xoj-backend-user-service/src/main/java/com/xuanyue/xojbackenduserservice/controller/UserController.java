@@ -263,15 +263,15 @@ public class UserController {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         User loginUser = userService.getLoginUser(request);
+        User user = new User();
+        BeanUtils.copyProperties(userUpdateMyRequest, user);
         if (userUpdateMyRequest.getOldUserPassword() != null) {
             String oldUserPassword = DigestUtils.md5DigestAsHex((SALT + userUpdateMyRequest.getOldUserPassword()).getBytes());
             if (!oldUserPassword.equals(loginUser.getUserPassword())) {
                 throw new BusinessException(ErrorCode.PARAMS_ERROR, "原始密码不对");
             }
+            user.setUserPassword(DigestUtils.md5DigestAsHex((SALT + userUpdateMyRequest.getUserPassword()).getBytes()));
         }
-        User user = new User();
-        BeanUtils.copyProperties(userUpdateMyRequest, user);
-        user.setUserPassword(DigestUtils.md5DigestAsHex((SALT + userUpdateMyRequest.getUserPassword()).getBytes()));
         user.setId(loginUser.getId());
         boolean result = userService.updateById(user);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
