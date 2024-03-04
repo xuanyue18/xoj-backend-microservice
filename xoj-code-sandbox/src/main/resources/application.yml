@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: xoj-code-sandbox
+  # 默认 dev 环境
+  profiles:
+    active: dev
+  # 支持 swagger3
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+server:
+  port: 8123
