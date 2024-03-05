@@ -1,11 +1,13 @@
 package com.xuanyue.xojbackendjudgeservice.judge.strategy;
 
 
+import com.xuanyue.xojbackendmodel.model.dto.codesandbox.ExecuteResult;
 import com.xuanyue.xojbackendmodel.model.dto.question.JudgeCase;
 import com.xuanyue.xojbackendmodel.model.dto.questionsubmit.JudgeInfo;
 import com.xuanyue.xojbackendmodel.model.entity.Question;
 import com.xuanyue.xojbackendmodel.model.entity.QuestionSubmit;
 import lombok.Data;
+import org.aspectj.bridge.Message;
 
 import java.util.List;
 
@@ -20,6 +22,10 @@ public class JudgeContext {
 
     private JudgeInfo judgeInfo;
 
+    private Integer status;
+
+    private List<ExecuteResult> results;
+
     private List<String> inputList;
 
     private List<String> outputList;
@@ -29,4 +35,6 @@ public class JudgeContext {
     private Question question;
 
     private QuestionSubmit questionSubmit;
+
+    private String message;
 }

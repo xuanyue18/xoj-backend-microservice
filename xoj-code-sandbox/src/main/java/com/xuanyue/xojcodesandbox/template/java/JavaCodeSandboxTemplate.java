@@ -4,13 +4,13 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.dfa.FoundWord;
 import cn.hutool.dfa.WordTree;
-import com.xuanyue.xojbackendcommon.common.ErrorCode;
-import com.xuanyue.xojbackendcommon.exception.BusinessException;
-import com.xuanyue.xojbackendmodel.model.dto.codesandbox.ExecuteCodeRequest;
-import com.xuanyue.xojbackendmodel.model.dto.codesandbox.ExecuteCodeResponse;
-import com.xuanyue.xojbackendmodel.model.dto.codesandbox.ExecuteResult;
-import com.xuanyue.xojbackendmodel.model.dto.questionsubmit.JudgeInfo;
-import com.xuanyue.xojbackendmodel.model.enums.ExecuteCodeStatusEnum;
+import com.xuanyue.xojcodesandbox.model.enums.ErrorCode;
+import com.xuanyue.xojcodesandbox.common.BusinessException;
+import com.xuanyue.xojcodesandbox.model.dto.ExecuteCodeRequest;
+import com.xuanyue.xojcodesandbox.model.dto.ExecuteCodeResponse;
+import com.xuanyue.xojcodesandbox.model.dto.ExecuteResult;
+import com.xuanyue.xojcodesandbox.model.dto.JudgeInfo;
+import com.xuanyue.xojcodesandbox.model.enums.ExecuteCodeStatusEnum;
 import com.xuanyue.xojcodesandbox.CodeSandbox;
 import com.xuanyue.xojcodesandbox.utils.ProcessUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static com.xuanyue.xojbackendcommon.common.SandBoxConstant.GLOBAL_JAVA_CLASS_NAME;
+import static com.xuanyue.xojcodesandbox.constants.SandBoxConstant.GLOBAL_JAVA_CLASS_NAME;
 
 
 /**

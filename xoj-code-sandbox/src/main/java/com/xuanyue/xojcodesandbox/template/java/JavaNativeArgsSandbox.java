@@ -1,6 +1,6 @@
 package com.xuanyue.xojcodesandbox.template.java;
 
-import com.xuanyue.xojbackendmodel.model.dto.codesandbox.ExecuteResult;
+import com.xuanyue.xojcodesandbox.model.dto.ExecuteResult;
 import com.xuanyue.xojcodesandbox.utils.ProcessUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.xuanyue.xojbackendcommon.common.SandBoxConstant.TIME_OUT;
+import static com.xuanyue.xojcodesandbox.constants.SandBoxConstant.TIME_OUT;
 
 
 /**
@@ -37,7 +37,7 @@ public class JavaNativeArgsSandbox extends JavaCodeSandboxTemplate {
             new Thread(() -> {
                 try {
                     Thread.sleep(TIME_OUT);
-                    log.info("超时了，中断程序");
+                    log.info("超时了，强制中断程序~");
                     runProcess.destroy();
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);

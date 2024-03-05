@@ -1,8 +1,8 @@
 package com.xuanyue.xojcodesandbox;
 
 
-import com.xuanyue.xojbackendmodel.model.dto.codesandbox.ExecuteCodeRequest;
-import com.xuanyue.xojbackendmodel.model.dto.codesandbox.ExecuteCodeResponse;
+import com.xuanyue.xojcodesandbox.model.dto.ExecuteCodeRequest;
+import com.xuanyue.xojcodesandbox.model.dto.ExecuteCodeResponse;
 
 /**
  * 代码沙箱接口定义

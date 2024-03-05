@@ -1,7 +1,7 @@
 package com.xuanyue.xojcodesandbox.controller;
 
-import com.xuanyue.xojbackendmodel.model.dto.codesandbox.ExecuteCodeRequest;
-import com.xuanyue.xojbackendmodel.model.dto.codesandbox.ExecuteCodeResponse;
+import com.xuanyue.xojcodesandbox.model.dto.ExecuteCodeRequest;
+import com.xuanyue.xojcodesandbox.model.dto.ExecuteCodeResponse;
 import com.xuanyue.xojcodesandbox.template.java.JavaNativeArgsSandbox;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -1,7 +1,7 @@
 package com.xuanyue.xojcodesandbox.template.java;
 
 
-import com.xuanyue.xojbackendmodel.model.dto.codesandbox.ExecuteResult;
+import com.xuanyue.xojcodesandbox.model.dto.ExecuteResult;
 
 import java.io.IOException;
 import java.util.List;

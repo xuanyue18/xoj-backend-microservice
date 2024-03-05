@@ -1,7 +1,7 @@
 package com.xuanyue.xojcodesandbox.template.java;
 
 import cn.hutool.core.util.StrUtil;
-import com.xuanyue.xojbackendmodel.model.dto.codesandbox.ExecuteResult;
+import com.xuanyue.xojcodesandbox.model.dto.ExecuteResult;
 import com.xuanyue.xojcodesandbox.utils.ProcessUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.xuanyue.xojbackendcommon.common.SandBoxConstant.TIME_OUT;
+import static com.xuanyue.xojcodesandbox.constants.SandBoxConstant.TIME_OUT;
 
 
 @Service

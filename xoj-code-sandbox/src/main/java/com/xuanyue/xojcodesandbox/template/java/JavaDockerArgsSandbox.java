@@ -10,7 +10,7 @@ import com.github.dockerjava.api.command.StatsCmd;
 import com.github.dockerjava.api.model.*;
 import com.github.dockerjava.core.DockerClientBuilder;
 import com.github.dockerjava.core.command.ExecStartResultCallback;
-import com.xuanyue.xojbackendmodel.model.dto.codesandbox.ExecuteResult;
+import com.xuanyue.xojcodesandbox.model.dto.ExecuteResult;
 import org.springframework.util.StopWatch;
 
 import java.io.Closeable;
@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static com.xuanyue.xojbackendcommon.common.SandBoxConstant.TIME_OUT;
+import static com.xuanyue.xojcodesandbox.constants.SandBoxConstant.TIME_OUT;
 
 
 public class JavaDockerArgsSandbox extends JavaCodeSandboxTemplate{
